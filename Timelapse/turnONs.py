@@ -1,0 +1,7 @@
+from picamera import PiCamera
+import RPi.GPIO as GPIO
+blue=33
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(blue, GPIO.OUT)
+
+GPIO.output(blue, GPIO.HIGH)
