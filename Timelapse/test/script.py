@@ -38,8 +38,8 @@ if os.path.exists(folder) == False:
 camera.resolution=(960,720)
 camera.ISO=700
 camera.framerate = 1 # frames/sec, determines the max shutter speed
-camera.shutter_speed = 200000 # exposure time in microsecs
-camera.exposure_mode = 'auto' #'fixedfps'
+camera.shutter_speed = 1000000 # exposure time in microsecs
+camera.exposure_mode = 'off' #
 camera.awb_gains = [1,1]
 camera.awb_mode = 'off'
 
