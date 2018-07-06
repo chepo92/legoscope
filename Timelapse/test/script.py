@@ -12,7 +12,8 @@ bgnd=40
 GPIO.setmode(GPIO.BOARD)
 GPIO.setup(side, GPIO.OUT)
 GPIO.setup(bgnd, GPIO.OUT)
-
+GPIO.output(side,GPIO.LOW)
+GPIO.output(bgnd,GPIO.LOW)
 camera = PiCamera()
 
 
@@ -36,9 +37,9 @@ if os.path.exists(folder) == False:
     
 # Minimal camera settings
 camera.resolution=(960,720)
-camera.ISO=700
+camera.ISO=400
 camera.framerate = 1 # frames/sec, determines the max shutter speed
-camera.shutter_speed = 1000000 # exposure time in microsecs
+camera.shutter_speed = 500000 # exposure time in microsecs
 camera.exposure_mode = 'off' #
 camera.awb_gains = [1,1]
 camera.awb_mode = 'off'
@@ -77,6 +78,7 @@ for i in range(steps):
 
     datestr = datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
     fname = os.path.join(folder, "b" + datestr + "_" + filename + "_%04d.jpg"%(i))
+    camera.shutter_speed = 800000 # exposure time in microsecs
     camera.capture(fname)
     
     #turn the LEDs off
@@ -90,6 +92,7 @@ for i in range(steps):
 
     datestr = datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
     fname = os.path.join(folder, "s" + datestr + "_" + filename + "_%04d.jpg"%(i))
+    camera.shutter_speed = 500000 # exposure time in microsecs
     camera.capture(fname)
     
     #turn the LEDs off
