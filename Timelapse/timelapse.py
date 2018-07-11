@@ -47,6 +47,7 @@ camera.awb_mode = 'off'
 # Advanced camera users:
 # -------------------------------------------------------------
 # These are other possible parameters to change, depending on experiment:
+#camera.rotation = 90
 #camera.analog_gain = 1
 #camera.digital_gain=1
 #camera.brightness = 50
