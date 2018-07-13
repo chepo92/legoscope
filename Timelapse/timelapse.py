@@ -74,26 +74,26 @@ for i in range(steps):
     print('Cycle ' + str(i))
     
     #Background light
-    # turn the LEDs on            
+    # turn the background LED on            
     GPIO.output(bgnd,GPIO.HIGH)
 
     datestr = datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
     fname = os.path.join(folder, "b" + datestr + "_" + filename + "_%04d.jpg"%(i))
-    camera.shutter_speed = 800000 # exposure time in microsecs
+    #camera.shutter_speed = 800000 # exposure time in microsecs
     camera.capture(fname)
     
     #turn the LEDs off
     GPIO.output(bgnd,GPIO.LOW)
 
-    sleep(delta) ##  waiting time 
+    sleep(delta) ##  waiting time between ilumination settle
 
     #Side Ligth
-    # turn the LEDs on            
+    # turn the side LEDs on            
     GPIO.output(side,GPIO.HIGH)
 
     datestr = datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
     fname = os.path.join(folder, "s" + datestr + "_" + filename + "_%04d.jpg"%(i))
-    camera.shutter_speed = 300000 # exposure time in microsecs
+    #camera.shutter_speed = 300000 # exposure time in microsecs
     camera.capture(fname)
     
     #turn the LEDs off
