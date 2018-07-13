@@ -37,6 +37,12 @@ print('AWB gains ' + str(g))
 #Start preview
 camera.start_preview()
 sleep(10)
-camera.capture('preview.jpg')
-#camera.capture('image.data', 'rgb')
+#camera.capture('preview.jpg')
+camera.capture('image.png', 'png')
+e = camera.exposure_speed
+print('Shutter Speed: ' + str(e))
+
+g = camera.awb_gains
+print('AWB gains ' + str(g))
+
 camera.stop_preview()
