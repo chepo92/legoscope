@@ -78,9 +78,9 @@ for i in range(steps):
     GPIO.output(bgnd,GPIO.HIGH)
 
     datestr = datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
-    fname = os.path.join(folder, "b" + datestr + "_" + filename + "_%04d.jpg"%(i))
+    fname = os.path.join(folder, "b" + datestr + "_" + filename + "_%04d.png"%(i))
     #camera.shutter_speed = 800000 # exposure time in microsecs
-    camera.capture(fname)
+    camera.capture(fname, 'png')
     
     #turn the LEDs off
     GPIO.output(bgnd,GPIO.LOW)
@@ -92,9 +92,9 @@ for i in range(steps):
     GPIO.output(side,GPIO.HIGH)
 
     datestr = datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
-    fname = os.path.join(folder, "s" + datestr + "_" + filename + "_%04d.jpg"%(i))
+    fname = os.path.join(folder, "s" + datestr + "_" + filename + "_%04d.png"%(i))
     #camera.shutter_speed = 300000 # exposure time in microsecs
-    camera.capture(fname)
+    camera.capture(fname, 'png')
     
     #turn the LEDs off
     GPIO.output(side,GPIO.LOW)
