@@ -1,13 +1,38 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-# Reference: http://picamera.readthedocs.io/en/release-1.10/index.html
-
 from picamera import PiCamera
+import RPi.GPIO as GPIO
 from time import sleep
-from datetime import timedelta
+import time
 import datetime
+import os
+import sys
+from shutil import copyfile
 
+side=33
+bgnd=40
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(side, GPIO.OUT)
+GPIO.setup(bgnd, GPIO.OUT)
+GPIO.output(side,GPIO.LOW)
+GPIO.output(bgnd,GPIO.LOW)
+
+# Parameters for the user to modify
+# Basic settings
+if len(sys.argv)==5:
+    folder = str(sys.argv[1])            # e.g. Timelapse
+    filename = str(sys.argv[2])          # e.g. im_exp1
+    interval = int(sys.argv[3])     # wait time in seconds e.g. 1800
+    steps = int(sys.argv[4])        # number of images   e.g 200
+else:
+    print ("Required parameters: folder name, filename, interval (secs), number of steps.")
+    sys.exit()
+    
+print('folder = ' + folder + '\nfilename = ' + filename +  
+      '\ninterval = ' + str(interval) + ' sec'+ '\nsteps = '+ str(steps))
+ 
+# make the folder if it doesn't exist
+if os.path.exists(folder) == False:
+    os.mkdir(folder)
+    
 #Variables
 #hRes = 960
 #vRes = 720
@@ -94,43 +119,55 @@ raw_input('Wait for the preview window, then press enter to take photo and close
 # 7 Turn off automatic gain (fix AG and DG) 
 camera.exposure_mode = 'off'
 
-# -------------------------------------------------------------
-
-# 11 Take Picture
-# Any attempt to capture an image without using the video port optiob will (temporarily)
-# select the 2592x1944 mode while the capture is performed (this is what causes
-# the flicker you sometimes see when a preview is running while a still image is captured).
-datestr = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-fname = "preview_" + datestr + ".png"
-camera.capture(fname, 'png')  # use_video_port defaults to False which means that the camera’s image port is used. This port is slow but produces better quality pictures.
-
-# Query shutter speed value
-e = camera.exposure_speed
-print('Shutter Speed: ' + str(e))
-
-# Query AWB gains
-g = camera.awb_gains
-print('AWB gains ' + str(g))
-
-# Query iso
-i = camera.iso
-print('ISO ' + str(i))
-
-# Query A gain
-a=camera.analog_gain
-print('A Gain ' + str(a))
-
-# Query D gains
-d=camera.digital_gain
-print('D Gain ' + str(d))
-
-b=camera.brightness
-print('brightness ' + str(b))
-
-c=camera.contrast
-print('contrast ' + str(c))
-
 #12 Stop preview
 camera.stop_preview()
 
-camera.close()
+# -------------------------------------------------------------
+
+# Save this file with the data (to record settings etc.)
+scriptpath = os.path.dirname(os.path.realpath(__file__))
+copyfile(os.path.join(scriptpath, sys.argv[0]), os.path.join(folder, 'script.py'))
+
+delta=1
+# Run the timelapse loop
+
+for i in range(steps):
+    
+    t1 = time.time()
+    print('Cycle ' + str(i))
+    
+    #Background light
+    # turn the background LED on            
+    GPIO.output(bgnd,GPIO.HIGH)
+
+    datestr = datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
+    fname = os.path.join(folder, "b" + datestr + "_" + filename + "_%04d.png"%(i))
+    camera.capture(fname, 'png')
+    
+    #turn the LEDs off
+    GPIO.output(bgnd,GPIO.LOW)
+
+    sleep(delta) ##  waiting time between ilumination settle
+
+    #Side Ligth
+    # turn the side LEDs on            
+    GPIO.output(side,GPIO.HIGH)
+
+    datestr = datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
+    fname = os.path.join(folder, "s" + datestr + "_" + filename + "_%04d.png"%(i))
+    camera.capture(fname, 'png')
+    
+    #turn the LEDs off
+    GPIO.output(side,GPIO.LOW)
+
+    elapsed = time.time()-t1
+
+    # print some relevant information
+    print('Elapsed cycle time: ' + str(elapsed))
+    print('Effective camera shutter speed :' + str(camera.shutter_speed) + '\n')
+    # if the effective shutter speed doesnt coincide with the one you set,
+    # you must modify the camera.framerate parameter.
+    
+    sleep(interval-elapsed) ##  waiting time between cycles
+    
+GPIO.cleanup()
