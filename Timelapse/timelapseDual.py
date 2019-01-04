@@ -149,7 +149,7 @@ for i in range(steps):
 
     sleep(delta) ##  waiting time between ilumination settle
 
-    #Side Ligth
+    #Side Light
     # turn the side LEDs on            
     GPIO.output(side,GPIO.HIGH)
 
