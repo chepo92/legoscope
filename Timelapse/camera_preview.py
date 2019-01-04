@@ -7,11 +7,12 @@ from picamera import PiCamera
 from time import sleep
 from datetime import timedelta
 import datetime
+import os
 
 #Variables
 #hRes = 960
 #vRes = 720
-fr = 1
+fr = 30
 iso = 500
 ss= 300000
 redG = 1.0
@@ -30,16 +31,16 @@ camera = PiCamera()
 camera.resolution=(960,720) 	# Retrieves or sets the resolution at which image captures, video recordings, and previews will be captured.
 
 # 3 Set frame rate
-camera.framerate = fr # frames/sec, determines the max shutter speed
+#camera.framerate = fr # frames/sec, determines the max shutter speed
 
 # 4 Set ISO to the desired value
-camera.iso = iso    # Retrieves or sets the apparent ISO setting of the camera.
+#camera.iso = iso    # Retrieves or sets the apparent ISO setting of the camera.
 
 # 5 Fix the ss
-camera.shutter_speed = ss #e
+#camera.shutter_speed = ss #e
 
 # 6 Wait for the automatic gain control to settle (Analog and Digital Gain)
-sleep(5)
+sleep(2)
 
 # Notice: we will skip step 7 as we need the automatic analog and digital gains for live previewing
 # as capture and preview use different ports disabling Auto gains now will give a correct captured image but a
@@ -49,10 +50,10 @@ sleep(5)
 # camera.exposure_mode = 'off'
 
 # 8 Disable AWB gain control
-camera.awb_mode = 'off'
+#camera.awb_mode = 'off'
 
 # 9 Now fix the Red & Blue gains
-camera.awb_gains = [redG,blueG]
+#camera.awb_gains = [redG,blueG]
 
 
 # Advanced camera users:
@@ -85,14 +86,17 @@ camera.awb_gains = [redG,blueG]
 # camera.start_preview(alpha =200)
 # -------------------------------------------------------------
 
+os.system('turnONs.py')
+
 # 10 Start preview
 camera.start_preview()
 
-# Wait for "Intro" input 
-raw_input('Wait for the preview window, then press enter to take photo and close preview: ')
+# Wait for "Intro" input
+input('Wait for the preview window, then press enter to take photo and close preview: ')
+#raw_input('Wait for the preview window, then press enter to take photo and close preview: ')  #Python 2
 
 # 7 Turn off automatic gain (fix AG and DG) 
-camera.exposure_mode = 'off'
+#camera.exposure_mode = 'off'
 
 # -------------------------------------------------------------
 
@@ -104,6 +108,7 @@ datestr = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 fname = "preview_" + datestr + ".png"
 camera.capture(fname, 'png')  # use_video_port defaults to False which means that the camera’s image port is used. This port is slow but produces better quality pictures.
 
+os.system('turnOFFs.py')
 # Query shutter speed value
 e = camera.exposure_speed
 print('Shutter Speed: ' + str(e))

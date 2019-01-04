@@ -7,5 +7,7 @@ GPIO.setmode(GPIO.BOARD)
 GPIO.setup(blue, GPIO.OUT)
 
 GPIO.output(blue,GPIO.LOW)
+GPIO.output(red,GPIO.LOW)
+GPIO.output(green,GPIO.LOW)
 
 GPIO.cleanup()

@@ -138,27 +138,31 @@ for i in range(steps):
     
     #Background light
     # turn the background LED on            
-    GPIO.output(bgnd,GPIO.HIGH)
+    os.system('turnONbg.py')
+    #GPIO.output(bgnd,GPIO.HIGH)
 
     datestr = datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
     fname = os.path.join(folder, "b" + datestr + "_" + filename + "_%04d.png"%(i))
     camera.capture(fname, 'png')
     
     #turn the LEDs off
-    GPIO.output(bgnd,GPIO.LOW)
+    os.system('turnOFFbg.py')
+    #GPIO.output(bgnd,GPIO.LOW)
 
     sleep(delta) ##  waiting time between ilumination settle
 
     #Side Light
     # turn the side LEDs on            
-    GPIO.output(side,GPIO.HIGH)
+    os.system('turnONs.py')
+    #GPIO.output(side,GPIO.HIGH)
 
     datestr = datetime.datetime.now().strftime("%Y-%m-%d-%H_%M_%S")
     fname = os.path.join(folder, "s" + datestr + "_" + filename + "_%04d.png"%(i))
     camera.capture(fname, 'png')
     
     #turn the LEDs off
-    GPIO.output(side,GPIO.LOW)
+    os.system('turnOFFs.py')
+    #GPIO.output(side,GPIO.LOW)
 
     elapsed = time.time()-t1
 
